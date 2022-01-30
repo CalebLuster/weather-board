@@ -24,16 +24,54 @@
     </header>
     <div class="container-fluid">
       <div class="row">
-        <div>
-          <h4>Search a city:</h4>
-          <div>
-            <input type="text" />
-            <div>
-              <button>Clear</button>
+        <div class="bg-light col-lg-3">
+          <h4 class="mt-1">Search a city:</h4>
+          <div class="mb-3 input-group">
+            <input
+              type="text"
+              id="city"
+              class="form-control"
+              aria-label="Enter city here"
+              placeholder="Enter city here"
+            />
+            <div class="input-group-append">
+              <button type="button" id="cityBtn" class="btn primary-btn">
+                <i class="fas fa-search"></i>
+              </button>
             </div>
           </div>
+          <button class="btn-primary btn mb-3" id="clearBtn" type="button">Clear</button>
+          <form id="searchedCities"></form>
+        </div>
+        <div class="col-lg-9">
+            <div class="row mr-0">
+                <div class="card m-3 col-lg-11 d-none" id="weatherNow">
+                    <div class="card-body">
+                        <h2 id="cityname" class="city-name align-middle"></h2>
+                        <img id="current-pic" alt="">
+                        <p id="temp"></p>
+                        <p id="UV"></p>
+                        <p id="wind"></p>
+                        <p id="humidity"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="d-none row" id="forecast-title">  
+                <div class="col-12">
+                    <h2>Week Forecast</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="forecast bg-primary text-white col-md-2 rounded m-2"></div>
+                <div class="forecast bg-primary text-white col-md-2 rounded m-2"></div>
+                <div class="forecast bg-primary text-white col-md-2 rounded m-2"></div>
+                <div class="forecast bg-primary text-white col-md-2 rounded m-2"></div>
+                <div class="forecast bg-primary text-white col-md-2 rounded m-2"></div>                
+            </div>
         </div>
       </div>
     </div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/assets/script.js"></script>
   </body>
 </html>
