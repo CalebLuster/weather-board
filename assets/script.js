@@ -17,8 +17,34 @@ function loadPage () {
     let wind = document.getElementById("Wind");
     let humidity = document.getElementById("Humidity");
     
-    function cityWeather () {
-        
+    function cityWeather (cityName) {
+        let URL = "https://openweathermap.org/" + cityName + "&appid=" + DefNotAPI;
+        axios.get(URL)
+            .then(function (response) {
+                weatherNow.classList.remove ("d-none");
+                let date = new Date(response.data.dt * 1000);
+                let day = date.getDate();
+                let months = date.getMonth() + 1;
+                let year = date.getFullYear();
+                let nwImg = response.data.weather[0].icon;
+
+                cityName.innerHTML = response.data.name + " (" + months + "/" + day + "/" + year + ") ";
+
+
+                tempature.innerHTML = "Temp: " + k2f(response.data.main.temp);
+                wind.innerHTML = "wind MPH: " + response.data.wind.speed + " MPH ";
+                humidity.innerHTML = "Humidity: " + response.data.main.humidity + "%";
+                todayImage.setAttribute("src", "https://openweathermap.org/img/wn" + weatherPic + "@2x.png");
+                todayImage.setAttribute("alt", response.data.weather[0].description);
+
+            })
+
+
+
+
+
+
+
     }
 
 
