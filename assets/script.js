@@ -36,7 +36,26 @@ function loadPage () {
                 humidity.innerHTML = "Humidity: " + response.data.main.humidity + "%";
                 todayImage.setAttribute("src", "https://openweathermap.org/img/wn" + weatherPic + "@2x.png");
                 todayImage.setAttribute("alt", response.data.weather[0].description);
-
+                let longitude = response.data.coord.lon;
+                let latitude = response.data.coord.lat;
+                let UVURL = "https://api.openweathermap.org/data/2.5/uvi/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + DefNotAPI + "&cnt=1";
+                axios.get(UVURL)
+                    .then(function (response) {
+                        let UVindex = document.createElement("span");
+                        
+                        if (response.data[0].value < 4 ) {
+                            UVindex.setAttribute("class", "badge-sucess badge");
+                        }
+                        else if (response.data[0].value < 8 ) {
+                            UVindex.setAttribute("class", "badge-warning badge");
+                        }
+                        else {
+                            UVindex.setAttribute("class", "badge-danger badge");
+                        }
+                        UVindex.innerHTML = response.data[0].value;
+                        UVIndex.innerHTML = "UV Index is: ";
+                        UVIndex.append(UVindex)
+                    });
             })
 
 
