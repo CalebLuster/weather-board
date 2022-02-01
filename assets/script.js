@@ -8,8 +8,6 @@ function loadPage () {
     let todayImage = document.getElementById("todayImg");
     let clearButton = document.getElementById("clearBtn");
     let citiesList = JSON.parse(localStorage.getItem("cities")) || [];
-    let c
-    let e  
     let API = "42cb9855fdf16bb6fae9c33abb5ae0c3";
     let DefNotAPI = "42cb9855fdf16bb8fae9c33abb5ae0c3";
     let tempature = document.getElementById("temp");
@@ -54,18 +52,44 @@ function loadPage () {
                         }
                         UVindex.innerHTML = response.data[0].value;
                         UVIndex.innerHTML = "UV Index is: ";
-                        UVIndex.append(UVindex)
+                        UVIndex.append(UVindex);
                     });
-            })
+                    let cityTitle = response.data.id;
+                    let URLfuture = "https://api.openweathermap.org/data/2.5/uvi/forecast?id=" + cityTitle + "&appid=" + DefNotAPI;
+                    axios.get(URLfuture)
+                        .then(function (response) {
+                        forecastTitle.classList.remove("d-none");
+                        let futureWeather = document.querySelectorAll(".forecast");
+                        for (i = 0; i < futureWeather.length; i++) {
+                            futureWeather[i].innerHTML = "";
+                            let futureYear = forecastDate.getFullYear();
+                            let futureMonth = forecastDate.getMonth(); + 1;
+                            let futureDay = forecastDate.getDate();
+                            let futureUV = i * 8 + 4;
+                            let futureConstant = new Date(response.data.list[futureUV].dt * 1000);
+                            let futureConsistent = document.createElement("p");
+                                futureConsistent.setAttribute("class", "forecast-date mt-3 mb-0");
+                                futureConsistent.innerHTML = futureMonth + "/" + futureDay + "/" + futureYear;
+                                futureConstant[i].append(futureConsistent);
+                            let futureWeatherVar = document.createElement("img");
+                                futureWeatherVar.setAttribute("src", "https://openweathermap.org/img/wn" + response.data.list[futureUV].weather[0].icon + "@2x.png");
+                                futureWeatherVar.setAttribute("alt",);
+                                futureWeather[i].append(futureWeatherVar);
+                            let futureTempature = document.createElement("p");
+                                futureTempature.innerHTML = "Tempature is: " + k2f(response.data.list[futureUV].main.temp) + " &#176F";
+                                futureWeather[i].append(futureTempature);
+                            let futureHumidity = document.createElement("p");
+                                futureHumidity.innerHTML = "Humidity is: " + response.data.list[futureUV].main.humidity + "%";
+                                futureWeather[i].append(futureHumidity);
+                        }
 
-
-
-
-
-
+                     })
+            });
 
     }
-
+    clearButton.addEventListener("click", function () {
+        
+    })
 
 
 
