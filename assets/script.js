@@ -15,8 +15,8 @@ function loadPage () {
     let wind = document.getElementById("Wind");
     let humidity = document.getElementById("Humidity");
     
-    function cityWeather (cityName) {
-        let URL = "https://openweathermap.org/" + cityName + "&appid=" + DefNotAPI;
+    function cityWeather(cityHeader) {
+        let URL = "https://openweathermap.org/data/2.5/weather?q=" + cityHeader + "&appid=" + DefNotAPI;
         axios.get(URL)
             .then(function (response) {
                 weatherNow.classList.remove ("d-none");
@@ -29,14 +29,14 @@ function loadPage () {
                 cityName.innerHTML = response.data.name + " (" + months + "/" + day + "/" + year + ") ";
 
 
-                tempature.innerHTML = "Temp: " + k2f(response.data.main.temp);
+                tempature.innerHTML = "Temp: " + math(response.data.main.temp);
                 wind.innerHTML = "wind MPH: " + response.data.wind.speed + " MPH ";
                 humidity.innerHTML = "Humidity: " + response.data.main.humidity + "%";
-                todayImage.setAttribute("src", "https://openweathermap.org/img/wn" + weatherPic + "@2x.png");
+                todayImage.setAttribute("src", "https://openweathermap.org/img/wn/" + nwImg + "@2x.png");
                 todayImage.setAttribute("alt", response.data.weather[0].description);
-                let longitude = response.data.coord.lon;
+                let longitude = response.data.coord.longitude;
                 let latitude = response.data.coord.lat;
-                let UVURL = "https://api.openweathermap.org/data/2.5/uvi/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + DefNotAPI + "&cnt=1";
+                let UVURL = "https://api.openweathermap.org/data/2.5/uvi/forecast?lat=" + latitude + "&lon=" + longitude + "&appid=" + DefNotAPI + "&cnt=1";
                 axios.get(UVURL)
                     .then(function (response) {
                         let UVindex = document.createElement("span");
@@ -72,11 +72,11 @@ function loadPage () {
                                 futureConsistent.innerHTML = futureMonth + "/" + futureDay + "/" + futureYear;
                                 futureConstant[i].append(futureConsistent);
                             let futureWeatherVar = document.createElement("img");
-                                futureWeatherVar.setAttribute("src", "https://openweathermap.org/img/wn" + response.data.list[futureUV].weather[0].icon + "@2x.png");
+                                futureWeatherVar.setAttribute("src", "https://openweathermap.org/img/wn/" + response.data.list[futureUV].weather[0].icon + "@2x.png");
                                 futureWeatherVar.setAttribute("alt",);
                                 futureWeather[i].append(futureWeatherVar);
                             let futureTempature = document.createElement("p");
-                                futureTempature.innerHTML = "Tempature is: " + k2f(response.data.list[futureUV].main.temp) + " &#176F";
+                                futureTempature.innerHTML = "Tempature is: " + math(response.data.list[futureUV].main.temp) + " &#176F";
                                 futureWeather[i].append(futureTempature);
                             let futureHumidity = document.createElement("p");
                                 futureHumidity.innerHTML = "Humidity is: " + response.data.list[futureUV].main.humidity + "%";
@@ -87,46 +87,41 @@ function loadPage () {
             });
 
     }
+    function math(C) {
+        return Math.floor((C - 273.15) * 1.8 + 32);
+    }
     clearButton.addEventListener("click", function () {
-        
+        citiesList = [];
+        localStorage.clear();
+        Loop();
     })
+    cityButton.addEventListener("click", function () {
+        let history = City.value
+        cityWeather(history);
+        citiesList.push(history);
+        localStorage.setItem("search", JSON.stringify(citiesList));
+        Loop();
+    })
+    function Loop () {
+        searchedCites.innerHTML = "";
+        for (let i = 0; i < citiesList.length; i++) {
+            let citiesListVar = document.createElement("input");
+                citiesListVar.setAttribute("type", "text");            
+                citiesListVar.setAttribute("readonly", true);
+                citiesListVar.setAttribute("class", "form-control bg-white d-block");
+                citiesListVar.setAttribute("value", citiesList[i]);
+                citiesListVar.setAttribute("click", function () {
+                    cityWeather(citiesListVar.value);
+                })
+                searchedCites.append(citiesListVar);            
+            }
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    Loop();
+    if (citiesList.length > 0) {
+        cityWeather(citiesList[citiesList.length - 1]);
+    }
 
 
 }
+loadPage();
